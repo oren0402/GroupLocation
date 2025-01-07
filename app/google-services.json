@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "296203129288",
+    "project_id": "grouplocation-5ed92",
+    "storage_bucket": "grouplocation-5ed92.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:296203129288:android:14c5a7f4ba27710755b0fd",
+        "android_client_info": {
+          "package_name": "com.example.grouplocation"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrFp1CTQSt1xIiwC-_eqHnKcEXwA-NfKg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
