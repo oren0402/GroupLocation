@@ -293,6 +293,8 @@ public class MainActivity extends AppCompatActivity implements NewGroup.OnFragme
                                             startActivity(new Intent(getApplicationContext(), MapsActivity.class));
                                         }
                                     });
+                                } else {
+                                    startActivity(new Intent(getApplicationContext(), MapsActivity.class));
                                 }
                             }
                         }
