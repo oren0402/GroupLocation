@@ -16,6 +16,8 @@ public class Constants {
     public static final String KEY_HAS_GROUP = "hasGroup";
 
     public static final String KEY_GROUP_NAME = "groupName";
+
+    public static final String KEY_COLOR = "color";
     public static final String KEY_LATITUDE = "latitude";
 
     public static final String KEY_LONGITUDE = "longitude";

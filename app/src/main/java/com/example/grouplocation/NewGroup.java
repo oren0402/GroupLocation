@@ -27,6 +27,7 @@ import com.example.grouplocation.utilities.PreferenceManager;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
+import java.util.Random;
 
 public class NewGroup extends Fragment {
 
@@ -89,6 +90,7 @@ public class NewGroup extends Fragment {
         details.put(Constants.KEY_NAME_HOST, "true");
         details.put(Constants.KEY_LATITUDE, "0");
         details.put(Constants.KEY_LONGITUDE, "0");
+        details.put(Constants.KEY_COLOR, String.valueOf(getRandomColor()));
         details.put(Constants.KEY_IMAGE, preferenceManager.getString(Constants.KEY_IMAGE));
         user.put(preferenceManager.getString(Constants.KEY_NAME), details);
         user.put(Constants.KEY_GROUP_NAME, editText.getText().toString());
@@ -101,5 +103,14 @@ public class NewGroup extends Fragment {
                     textView.setVisibility(View.VISIBLE);
                     imageView.setVisibility(View.VISIBLE);
                 });
+    }
+    private int getRandomColor() {
+        Random random = new Random();
+        int red = random.nextInt(256);   // 0-255
+        int green = random.nextInt(256); // 0-255
+        int blue = random.nextInt(256);  // 0-255
+
+        // Combine into a color (ARGB format)
+        return 0xFF000000 | (red << 16) | (green << 8) | blue;
     }
 }

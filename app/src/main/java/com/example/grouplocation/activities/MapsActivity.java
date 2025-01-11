@@ -47,6 +47,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.grouplocation.databinding.ActivityMapsBinding;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
@@ -60,6 +62,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private FusedLocationProviderClient fusedLocationClient;
     private GoogleMap mMap;
+
+    private List<Polyline> polylines = new ArrayList<>();
 
     List<Pair<Marker, Bitmap>> markersWithDrawables = new ArrayList<>();
     private LocationCallback locationCallback;
@@ -211,6 +215,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void updateUsersLocation() {
         markersWithDrawables = new ArrayList<>();
         removeAllMarkers();
+        removeAllPolylines();
         docRef.get().addOnSuccessListener(documentSnapshot -> {
             if (documentSnapshot.exists()) {
                 // Get the current array (assuming it is under the field "locations")
@@ -237,6 +242,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 First = false;
                                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 17));
                             }
+                            if (nestedMap.containsKey("points")) {
+                                int color = Integer.parseInt(nestedMap.get(Constants.KEY_COLOR).toString());
+                                List<LatLng> points = new ArrayList<>();
+                                HashMap<String, Object> pointsFirebase = (HashMap<String, Object>) nestedMap.get("points");
+                                for (int i = 0; i < pointsFirebase.size(); i++) {
+                                    HashMap<String, Object> twoPoints = (HashMap<String, Object>) pointsFirebase.get(String.valueOf(i));
+                                    Double latitude = Double.parseDouble(twoPoints.get(Constants.KEY_LATITUDE).toString());
+                                    Double longitude = Double.parseDouble(twoPoints.get(Constants.KEY_LONGITUDE).toString());
+                                    points.add(new LatLng(latitude, longitude));
+                                }
+                                addPoly(points, color);
+                            }
                         }
                     }
                     changeZoom();
@@ -256,6 +273,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 updateUsersLocation();
             }
         }, delay);
+    }
+
+    public void addPoly(List<LatLng> points, int color) {
+        Polyline polyline = mMap.addPolyline(new PolylineOptions()
+                .addAll(points) // Add all points from the list
+                .width(50)      // Line width in pixels
+                .color(color));
+
+        polylines.add(polyline);
+    }
+
+    private void removeAllPolylines() {
+        for (Polyline polyline : polylines) {
+            polyline.remove(); // Remove the polyline from the map
+        }
+        polylines.clear(); // Clear the list
     }
 
     public void changeZoom() {

@@ -95,7 +95,16 @@ public class LocationService extends Service {
                                     // Iterate through the array to find and update the map in the array
                                     user.put(Constants.KEY_LATITUDE, location.getLatitude());
                                     user.put(Constants.KEY_LONGITUDE, location.getLongitude());
-
+                                    HashMap<String, Object> pointsList = new HashMap<>();
+                                    if (user.containsKey("points")) {
+                                        pointsList = (HashMap<String, Object>) user.get("points");
+                                    }
+                                    int size = pointsList.size();
+                                    HashMap<String, Object> twoPoints = new HashMap<>();
+                                    twoPoints.put(Constants.KEY_LATITUDE, location.getLatitude());
+                                    twoPoints.put(Constants.KEY_LONGITUDE, location.getLongitude());
+                                    pointsList.put(String.valueOf(size), twoPoints);
+                                    user.put("points", pointsList);
                                     // Update the document with the modified array
                                     docRef.update(userName, user)
                                             .addOnSuccessListener(aVoid -> {

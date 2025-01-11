@@ -55,6 +55,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -285,6 +286,7 @@ public class MainActivity extends AppCompatActivity {
                                     user.put(Constants.KEY_IMAGE, preferenceManager.getString(Constants.KEY_IMAGE));
                                     user.put(Constants.KEY_LATITUDE, "0");
                                     user.put(Constants.KEY_LONGITUDE, "0");
+                                    user.put(Constants.KEY_COLOR, String.valueOf(getRandomColor()));
                                     docRef.update(preferenceManager.getString(Constants.KEY_NAME), user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void unused) {
@@ -296,6 +298,16 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
         }
+    }
+
+    private int getRandomColor() {
+        Random random = new Random();
+        int red = random.nextInt(256);   // 0-255
+        int green = random.nextInt(256); // 0-255
+        int blue = random.nextInt(256);  // 0-255
+
+        // Combine into a color (ARGB format)
+        return 0xFF000000 | (red << 16) | (green << 8) | blue;
     }
 
     private String encodedImage(Bitmap bitmap) {
