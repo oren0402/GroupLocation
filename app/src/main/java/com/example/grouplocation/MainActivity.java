@@ -57,7 +57,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NewGroup.OnFragmentInteractionListener{
 
     private PreferenceManager preferenceManager;
 
@@ -328,6 +328,17 @@ public class MainActivity extends AppCompatActivity {
         previewBitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
         byte[] bytes = byteArrayOutputStream.toByteArray();
         return Base64.encodeToString(bytes, Base64.DEFAULT);
+    }
+    public void onFragmentEvent(String data) {
+        // Handle the event from the fragment
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmentView);
+        findViewById(R.id.fragmentView).setVisibility(View.GONE);
+        getSupportFragmentManager().beginTransaction()
+                .remove(fragment)
+                .commit();
+        if (preferenceManager.getBoolean(Constants.KEY_HAS_GROUP)) {
+            startActivity(new Intent(this, MapsActivity.class));
+        }
     }
 
     public void onBackPressed() {

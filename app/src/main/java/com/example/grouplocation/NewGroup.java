@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -33,12 +34,21 @@ public class NewGroup extends Fragment {
 
     private Button button;
 
+    private Button continueOn;
+
     private TextView textView;
 
     private ImageView imageView;
 
     private PreferenceManager preferenceManager;
     private EditText editText;
+
+    private OnFragmentInteractionListener mListener;
+
+    // Define the interface
+    public interface OnFragmentInteractionListener {
+        void onFragmentEvent(String data); // Example event method
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,6 +60,7 @@ public class NewGroup extends Fragment {
         preferenceManager = new PreferenceManager(getActivity());
         editText = rootView.findViewById(R.id.nameOfGroup);
         imageView = rootView.findViewById(R.id.copy);
+        continueOn = rootView.findViewById(R.id.continueOn);
         textView = rootView.findViewById(R.id.link);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,6 +71,12 @@ public class NewGroup extends Fragment {
                     editText.setError("must input the name");
                 }
 
+            }
+        });
+        continueOn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                notifyActivity("hello");
             }
         });
         imageView.setOnClickListener(new View.OnClickListener() {
@@ -102,6 +119,7 @@ public class NewGroup extends Fragment {
                     textView.setText("https://www.grouplocation.com/" + documentReference.getId());
                     textView.setVisibility(View.VISIBLE);
                     imageView.setVisibility(View.VISIBLE);
+                    continueOn.setVisibility(View.VISIBLE);
                 });
     }
     private int getRandomColor() {
@@ -112,5 +130,22 @@ public class NewGroup extends Fragment {
 
         // Combine into a color (ARGB format)
         return 0xFF000000 | (red << 16) | (green << 8) | blue;
+    }
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        // Ensure the containing activity implements the interface
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+    public void notifyActivity(String data) {
+        if (mListener != null) {
+            mListener.onFragmentEvent(data);
+        }
     }
 }
