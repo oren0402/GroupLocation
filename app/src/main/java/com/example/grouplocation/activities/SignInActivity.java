@@ -1,7 +1,9 @@
 package com.example.grouplocation.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
@@ -26,6 +28,27 @@ public class SignInActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         preferenceManager = new PreferenceManager(getApplicationContext());
+        if (!preferenceManager.getBoolean("Not First Time")) {
+            preferenceManager.putBoolean("Not First Time", true);
+            Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            Uri uri = Uri.fromParts("package", getPackageName(), null);
+            intent.setData(uri);
+            Toast.makeText(getApplicationContext(), "Set as defualt->Supported web addresses->turn on", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Set as defualt->Supported web addresses->turn on", Toast.LENGTH_LONG).show();
+            startActivity(intent);
+        }
+        Intent intent2 = getIntent();
+        Uri data = intent2.getData();
+        if (data != null) {
+            String path = data.getPath();  // Get the path part of the URL
+            if (path != null) {
+                // Split the path using '/' and get the last part
+                String[] pathParts = path.split("/");
+                String lastPart = pathParts[pathParts.length - 1];
+                preferenceManager.putBoolean(Constants.KEY_HAS_GROUP, true);
+                preferenceManager.putString(Constants.KEY_GROUP_NAME, lastPart);
+            }
+        }
         if (preferenceManager.getBoolean(Constants.KEY_IS_SIGNED_IN)) {
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
@@ -68,6 +91,9 @@ public class SignInActivity extends AppCompatActivity {
                             && task.getResult().getDocuments().size() > 0) {
                         DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
                         preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
+                        if (!preferenceManager.getBoolean(Constants.KEY_HAS_GROUP)) {
+                            preferenceManager.putBoolean(Constants.KEY_HAS_GROUP, false);
+                        }
                         preferenceManager.putString(Constants.KEY_USER_ID, documentSnapshot.getId());
                         preferenceManager.putString(Constants.KEY_NAME, documentSnapshot.getString(Constants.KEY_NAME));
                         preferenceManager.putString(Constants.KEY_IMAGE, documentSnapshot.getString(Constants.KEY_IMAGE));

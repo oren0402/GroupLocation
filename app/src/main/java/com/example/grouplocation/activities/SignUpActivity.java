@@ -101,6 +101,7 @@ public class SignUpActivity extends AppCompatActivity {
                 .addOnSuccessListener(documentReference -> {
                     loading(false);
                     preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
+                    preferenceManager.putBoolean(Constants.KEY_HAS_GROUP, false);
                     preferenceManager.putString(Constants.KEY_USER_ID, documentReference.getId());
                     preferenceManager.putString(Constants.KEY_NAME, inputName.getText().toString());
                     preferenceManager.putString(Constants.KEY_IMAGE, encodedImage);
