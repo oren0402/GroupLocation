@@ -67,6 +67,20 @@
             app:layout_constraintEnd_toEndOf="@id/imageSignOut"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageAddFriend"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:layout_marginEnd="@dimen/_60sdp"
+            android:layout_marginRight="@dimen/_16sdp"
+            android:background="@drawable/background_icon"
+            android:padding="@dimen/_6sdp"
+            android:src="@drawable/baseline_person_add_alt_24"
+            android:tint="@color/primary_dark"
+            app:layout_constraintEnd_toEndOf="@id/imageSignOut"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/textProfile"
             android:layout_width="100dp"
@@ -145,6 +159,16 @@ pressing the button below"
         android:id="@+id/fragmentView"
         android:layout_width="300dp"
         android:layout_height="300dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@android:color/white" />
+    <FrameLayout
+        android:id="@+id/fragmentViewFriends"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:visibility="gone"

@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements NewGroup.OnFragme
     private String encodedImage;
     private String encodedImageBig;
     private View fragment;
+    private View fragmentFriends;
 
     private Button button;
 
@@ -93,12 +94,17 @@ public class MainActivity extends AppCompatActivity implements NewGroup.OnFragme
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+
         preferenceManager = new PreferenceManager(this);
         image = findViewById(R.id.imageProfile);
         progressBar = findViewById(R.id.progressBar1);
         parentLayout = findViewById(R.id.constraint);
         textView = findViewById(R.id.textName);
         fragment = findViewById(R.id.fragmentView);
+        fragmentFriends = findViewById(R.id.fragmentViewFriends);
         constraintLayout = findViewById(R.id.constraint);
         button = findViewById(R.id.newGroup);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -144,6 +150,16 @@ public class MainActivity extends AppCompatActivity implements NewGroup.OnFragme
                 stopService(serviceIntent);
                 startActivity(new Intent(getApplicationContext(), SignInActivity.class));
                 finish();
+            }
+        });
+        findViewById(R.id.imageAddFriend).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragmentFriends.setVisibility(View.VISIBLE);
+                AddFriends fragment = new AddFriends();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragmentViewFriends, fragment)
+                        .commit();
             }
         });
         parentLayout.setOnTouchListener((v, event) -> {
