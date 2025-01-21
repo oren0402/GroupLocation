@@ -2,9 +2,15 @@ package com.example.grouplocation.activities;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -25,11 +31,16 @@ import android.util.Base64;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.example.grouplocation.LocationService;
 import com.example.grouplocation.MainActivity;
+import com.example.grouplocation.NewGroup;
 import com.example.grouplocation.R;
+import com.example.grouplocation.friendsRecycler;
 import com.example.grouplocation.utilities.Constants;
 import com.example.grouplocation.utilities.PreferenceManager;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -82,6 +93,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Bitmap bitmap;
     private DocumentReference docRef;
     double longitude;
+    Button toggleButton;
+    LinearLayout collapsibleContent;
+    private boolean isExpanded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +121,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         bitmap = getCircularBitmap(bitmap);
         button = findViewById(R.id.leaveBtn);
+        toggleButton = findViewById(R.id.toggleButton);
+        collapsibleContent = findViewById(R.id.collapsibleContent);
         docRef.get().addOnSuccessListener(documentSnapshot -> {
             if (documentSnapshot.exists()) {
                 // Get the current array (assuming it is under the field "locations")
@@ -147,6 +163,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
                 finish();
+            }
+        });
+        toggleButton.setOnClickListener(v -> {
+            if (isExpanded) {
+                collapseView(collapsibleContent, toggleButton);
+            } else {
+                expandView(collapsibleContent, toggleButton);
             }
         });
     }
@@ -317,4 +340,59 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.clear(); // Clears all markers and overlays
         }
     }
+
+    private void expandView(View view, Button toggleButton) {
+        // Set the view's scale to 0 initially
+        view.setVisibility(View.VISIBLE);
+        view.setScaleX(0);
+        view.setScaleY(0);
+
+        // Animate scaling from 0 to 1 (expand)
+        ObjectAnimator scaleXAnimator = ObjectAnimator.ofFloat(view, "scaleX", 0f, 1f);
+        ObjectAnimator scaleYAnimator = ObjectAnimator.ofFloat(view, "scaleY", 0f, 1f);
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(scaleXAnimator, scaleYAnimator);
+        animatorSet.setDuration(500);
+        animatorSet.start();
+
+        // Update the button text
+        toggleButton.setText("−");
+        isExpanded = true;
+        friendsRecycler fragment = new friendsRecycler();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.allFriends, fragment)
+                .commit();
+    }
+
+    private void collapseView(View view, Button toggleButton) {
+        // Animate scaling from 1 to 0 (collapse)
+        ObjectAnimator scaleXAnimator = ObjectAnimator.ofFloat(view, "scaleX", 1f, 0f);
+        ObjectAnimator scaleYAnimator = ObjectAnimator.ofFloat(view, "scaleY", 1f, 0f);
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(scaleXAnimator, scaleYAnimator);
+        animatorSet.setDuration(500);
+        animatorSet.addListener(new android.animation.Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(android.animation.Animator animation) {}
+
+            @Override
+            public void onAnimationEnd(android.animation.Animator animation) {
+                view.setVisibility(View.GONE); // Hide the view after collapse
+            }
+
+            @Override
+            public void onAnimationCancel(android.animation.Animator animation) {}
+
+            @Override
+            public void onAnimationRepeat(android.animation.Animator animation) {}
+        });
+        animatorSet.start();
+
+        // Update the button text
+        toggleButton.setText("+");
+        isExpanded = false;
+    }
+
 }

@@ -9,14 +9,14 @@ public class FriendsModel {
     private String personName;
     private Bitmap personImage;
     private Drawable addOrRemove;
-    private Boolean addOrRemoveBool;
+    private String type;
 
     // creating constructor for our variables.
-    public FriendsModel(String personName, Bitmap personImage, Drawable addOrRemove, Boolean addOrRemoveBool) {
+    public FriendsModel(String personName, Bitmap personImage, Drawable addOrRemove, String type) {
         this.personName = personName;
         this.personImage = personImage;
         this.addOrRemove = addOrRemove;
-        this.addOrRemoveBool = addOrRemoveBool;
+        this.type = type;
     }
 
     // creating getter and setter methods.
@@ -32,8 +32,12 @@ public class FriendsModel {
         return addOrRemove;
     }
 
-    public Boolean getAddOrRemoveBool() {
-        return addOrRemoveBool;
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public Bitmap getPersonImage() {

@@ -163,21 +163,27 @@ public class SignUpActivity extends AppCompatActivity {
             return false;
         }else if(inputName.getText().toString().trim().isEmpty()) {
             showToast("Enter Name");
+            inputName.setError("Enter Name");
             return false;
         }else if(inputEmail.getText().toString().trim().isEmpty()) {
             showToast("Enter Email");
+            inputEmail.setError("Enter Email");
             return false;
         }else if(!Patterns.EMAIL_ADDRESS.matcher(inputEmail.getText().toString()).matches()) {
             showToast("Enter valid address");
+            inputEmail.setError("Enter valid address");
             return false;
         }else if(inputPassword.getText().toString().trim().isEmpty()) {
             showToast("Enter password");
+            inputPassword.setError("Enter password");
             return false;
         }else if(inputConfirmPassword.getText().toString().trim().isEmpty()) {
             showToast("Confirm your password");
+            inputConfirmPassword.setError("Confirm your password");
             return false;
         }else if(!inputPassword.getText().toString().equals(inputConfirmPassword.getText().toString())) {
             showToast("Password & confirm password must be the same");
+            inputConfirmPassword.setError("Password & confirm password must be the same");
             return false;
         } else {
             return true;

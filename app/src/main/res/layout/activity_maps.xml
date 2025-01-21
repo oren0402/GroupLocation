@@ -23,6 +23,34 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
+        android:id="@+id/toggleButton"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:text="+"
+        android:layout_marginTop="150dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/collapsibleContent"
+        android:layout_width="300dp"
+        android:layout_height="400dp"
+        android:background="#EFEFEF"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/toggleButton"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <fragment
+            android:id="@+id/allFriends"
+            android:name="com.example.grouplocation.friendsRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+
+    <Button
         android:id="@+id/leaveBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

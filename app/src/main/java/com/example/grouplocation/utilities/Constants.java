@@ -19,6 +19,10 @@ public class Constants {
 
     public static final String KEY_FRIENDS = "friends";
 
+    public static final String KEY_COLLECTION_REQUESTS = "requests";
+
+    public static final String KEY_USER_REQUESTED = "userRequested";
+
     public static final String KEY_COLOR = "color";
     public static final String KEY_LATITUDE = "latitude";
 

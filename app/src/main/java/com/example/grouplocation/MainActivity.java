@@ -361,10 +361,16 @@ public class MainActivity extends AppCompatActivity implements NewGroup.OnFragme
 
     public void onBackPressed() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmentView);
+        Fragment fragment1 = getSupportFragmentManager().findFragmentById(R.id.fragmentViewFriends);
         if (fragment != null) {
             findViewById(R.id.fragmentView).setVisibility(View.GONE);
             getSupportFragmentManager().beginTransaction()
                     .remove(fragment)
+                    .commit();
+        } else if (fragment1 != null) {
+            findViewById(R.id.fragmentViewFriends).setVisibility(View.GONE);
+            getSupportFragmentManager().beginTransaction()
+                    .remove(fragment1)
                     .commit();
         } else {
             super.onBackPressed();

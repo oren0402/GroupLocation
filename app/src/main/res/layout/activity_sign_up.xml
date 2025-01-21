@@ -122,6 +122,7 @@
                 android:text="@string/sign_up"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_13ssp"
+                android:background="@drawable/button_gradient"
                 android:textStyle="bold"
                 app:cornerRadius="@dimen/_8sdp"/>
 
@@ -140,8 +141,8 @@
             android:id="@+id/textSignIn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:text="@string/sign_in"
+            android:layout_marginTop="50dp"
+            android:text="Back To Login"
             android:textColor="@color/primary"
             android:textSize="@dimen/_13ssp"
             android:textStyle="bold"/>

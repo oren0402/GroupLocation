@@ -8,27 +8,17 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import androidx.appcompat.widget.SearchView;
-import android.widget.Toast;
-import androidx.appcompat.widget.Toolbar;
 
 import com.example.grouplocation.utilities.Constants;
 import com.example.grouplocation.utilities.PreferenceManager;
@@ -43,99 +33,29 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddFriends extends Fragment {
+public class friendsRecycler extends Fragment {
 
-    private PreferenceManager preferenceManager;
-
-    private CollectionReference collectionReference;
-
-    private RecyclerView friendsRecycler;
-    private Toolbar toolbar;
-
-    private FriendsAdapter adapter;
     private ArrayList<FriendsModel> friendsModelArrayList;
+    private CollectionReference collectionReference;
+    private PreferenceManager preferenceManager;
+    private friendsMapsAdapter adapter;
+    private RecyclerView friendsRecycler;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        setHasOptionsMenu(true);
-        View rootView = inflater.inflate(R.layout.fragment_add_friends, container, false);
-
-        preferenceManager = new PreferenceManager(getActivity());
+        View rootView = inflater.inflate(R.layout.fragment_friends_recycler, container, false);
 
         FirebaseFirestore dataBase = FirebaseFirestore.getInstance();
-        collectionReference = dataBase.collection(Constants.KEY_COLLECTION_USERS);
-
+        preferenceManager = new PreferenceManager(getActivity());
         friendsRecycler = rootView.findViewById(R.id.idFriendsList);
-        toolbar = rootView.findViewById(R.id.toolbar);
-
-        // Set the Toolbar as the ActionBar
-        if (getActivity() instanceof AppCompatActivity) {
-            AppCompatActivity activity = (AppCompatActivity) getActivity();
-            activity.setSupportActionBar(toolbar);
-        }
-
-        // calling method to build recycler view
+        collectionReference = dataBase.collection(Constants.KEY_COLLECTION_USERS);
         buildRecyclerView();
-
+        // Inflate the layout for this fragment
         return rootView;
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, @NonNull MenuInflater inflater) {
-        // get the MenuInflater
-        inflater.inflate(R.menu.search_menu, menu);
-
-        // get the search menu item
-        MenuItem searchItem = menu.findItem(R.id.actionSearch);
-
-        // get the SearchView from the menu item
-        SearchView searchView = (SearchView) searchItem.getActionView();
-
-        // set the on query text listener for the SearchView
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                // Perform search on submit
-                filter(query);
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                // Update the filter as the text changes
-                filter(newText);
-                return false;
-            }
-        });
-
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    // method to filter data based on query
-    private void filter(String text) {
-        // creating a new array list to filter data
-        ArrayList<FriendsModel> filteredlist = new ArrayList<>();
-
-        // running a for loop to compare elements
-        for (FriendsModel item : friendsModelArrayList) {
-            // checking if the entered string matches any item of our recycler view
-            if (item.getPersonName().toLowerCase().contains(text.toLowerCase())) {
-                // adding matched item to the filtered list
-                filteredlist.add(item);
-            }
-        }
-
-        if (filteredlist.isEmpty()) {
-            // displaying a toast message if no data found
-        } else {
-            // passing the filtered list to the adapter class
-            adapter.filterList(filteredlist);
-        }
-    }
-
-    // method to build RecyclerView
     private void buildRecyclerView() {
         // creating a new array list
         friendsModelArrayList = new ArrayList<>();
@@ -165,14 +85,12 @@ public class AddFriends extends Fragment {
                                                         byte[] bytes = Base64.decode(document.getString(Constants.KEY_IMAGE_BIG), Base64.DEFAULT);
                                                         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                                                         if (friends.contains(name)) {
-                                                            friendsModelArrayList.add(new FriendsModel(name, getCircularBitmap(bitmap), getResources().getDrawable(R.drawable.person_remove_24px), "remove"));
-                                                        } else {
-                                                            friendsModelArrayList.add(new FriendsModel(name, getCircularBitmap(bitmap), getResources().getDrawable(R.drawable.baseline_person_add_alt_24), "add"));
+                                                            friendsModelArrayList.add(new FriendsModel(name, getCircularBitmap(bitmap), getResources().getDrawable(R.drawable.baseline_person_add_alt_24), "none"));
                                                         }
                                                     }
                                                 }
 
-                                                adapter = new FriendsAdapter(friendsModelArrayList, getActivity());
+                                                adapter = new friendsMapsAdapter(friendsModelArrayList, getActivity());
 
                                                 // adding layout manager to the RecyclerView
                                                 LinearLayoutManager manager = new LinearLayoutManager(getActivity());
@@ -220,6 +138,4 @@ public class AddFriends extends Fragment {
         // Return the circular bitmap
         return dstBitmap;
     }
-
-
 }
